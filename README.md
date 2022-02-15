@@ -21,4 +21,25 @@
     - (해결) : 랜덤한 값에 100이상(-> 0으로 기준을 잡지않은 이유: 너무 많이 퍼지지 않게하기위해서)
   - [error2] : 리플레이 버튼을 누르게되면 기존에 추가된 타겟에 추가가되어 보여지는 오류가 생겼다
     - (해결) : while반복문을 이용해 타겟박스의 자식요소가 없어질때까지(false) 첫번째 자식요소를 지우는 명령을 추가해 해결
+  ```JavaScript
+  //[error2 : 수정전]
+      function rePlayGame() {
+  gameStart = false;
+  resetBox.classList.remove('show');
+  resetBox.classList.add('hidden');
+  onPlayGame();
+  }
+  ```
+  ```JavaScript
+  //[error2 : 수정후]
+  function rePlayGame() {
+  gameStart = false;
+  while (targetBox.hasChildNodes()) {
+    targetBox.removeChild(targetBox.firstChild);
+  }
+  resetBox.classList.remove('show');
+  resetBox.classList.add('hidden');  
+  onPlayGame();
+  }
+ ```
 ## 게임만들기는 아직 진행중 --img~~ 😎
