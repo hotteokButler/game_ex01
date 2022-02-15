@@ -13,8 +13,8 @@ let bugList = [];
 let time;
 let count;
 
-function randomOffset(num) {
-  let randomValue = Math.floor(Math.random() * num);
+function randomOffset(length) {
+  let randomValue = Math.floor(Math.random() * length);
 
   if (randomValue < 100) {
     return;
@@ -97,12 +97,11 @@ function onPlayGame(event) {
 
 function rePlayGame() {
   gameStart = false;
-  resetBox.classList.remove('show');
-  resetBox.classList.add('hidden');
   while (targetBox.hasChildNodes()) {
     targetBox.removeChild(targetBox.firstChild);
   }
-
+  resetBox.classList.remove('show');
+  resetBox.classList.add('hidden');
   onPlayGame();
 }
 
