@@ -2,7 +2,7 @@
 
 - **practice exmaple project for internet lecture from DreamCoding**
 
-- **All source of copyrights are followed in DreamCoding.**
+- **All source of copyrights are followed in DreamCoding.(Images, musics)**
 
 - **But, The All code is from 'hotteokButler'!**
 ## 게임기능
