@@ -10,9 +10,17 @@ const resetBox = document.querySelector('.game-lost');
 let gameStart = false;
 let carrotList = [];
 let bugList = [];
+let time;
+let count;
 
 function randomOffset(num) {
-  return Math.floor(Math.random() * num) - 100;
+  let randomValue = Math.floor(Math.random() * num);
+
+  if (randomValue < 100) {
+    return;
+  } else {
+    return randomValue - 100;
+  }
 }
 
 function spreadTarget() {
@@ -27,6 +35,7 @@ function spreadTarget() {
 function randomTargets(num) {
   const carrot = document.createElement('p');
   const bug = document.createElement('p');
+  count = num;
 
   for (let i = 0; i < num + 1; i++) {
     carrot.classList.add('game-item__carrot');
@@ -43,19 +52,28 @@ function randomTargets(num) {
   }
 }
 
-function timeSet() {
-  let time = 15;
-  function start() {
-    timmer.textContent = `00:${String(time).padStart(2, '0')}`;
-    time--;
-    if (time < 0) {
-      clearInterval(start);
-      resetBox.classList.remove('hidden');
-      resetBox.classList.add('show');
-      time = 0;
-    }
+function start() {
+  timmer.textContent = `00:${String(time).padStart(2, '0')}`;
+  time--;
+
+  if (time < 0) {
+    clearInterval(start);
+    resetBox.classList.remove('hidden');
+    resetBox.classList.add('show');
+    time = 0;
   }
-  setInterval(start, 1000);
+}
+
+function removeTarget(event) {
+  let killTarget = event.target;
+  if (killTarget.id === 'bug') {
+    gameStart = true;
+    resetBox.classList.add('show');
+    resetBox.classList.remove('hidden');
+  } else if (killTarget.id === 'carrot') {
+    targetBox.removeChild(killTarget);
+    count--;
+  }
 }
 
 function onPlayGame(event) {
@@ -66,16 +84,27 @@ function onPlayGame(event) {
 
     randomTargets(7);
     spreadTarget();
-    timeSet();
+
+    time = 15;
+    setInterval(start, 1000);
+
+    targetBox.addEventListener('click', removeTarget);
   } else if (gameStart === ture) {
     playBtn.removeEventListener(onPlayGame);
+    targetBox.removeEventListener(removeTarget);
   }
 }
+
 function rePlayGame() {
   gameStart = false;
   resetBox.classList.remove('show');
   resetBox.classList.add('hidden');
+  while (targetBox.hasChildNodes()) {
+    targetBox.removeChild(targetBox.firstChild);
+  }
+
   onPlayGame();
 }
+
 playBtn.addEventListener('click', onPlayGame);
 resetBtn.addEventListener('click', rePlayGame);
