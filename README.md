@@ -1,7 +1,7 @@
 # 게임만들기 예제 🥕🐞
 
-**practice exmaple project for internet lecture from DreamCoding
-All source of copyrights are followed in DreamCoding.**
+**practice exmaple project for internet lecture from DreamCoding**
+**All source of copyrights are followed in DreamCoding.**
 
 ## 게임기능
   - 시간내에 랜덤으로 뿌려진 당근을 찾아 click!하세요!
