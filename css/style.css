@@ -78,10 +78,17 @@ body {
   text-indent: -99999px;
   cursor: pointer;
 }
-.game-lost__txt {
+.game-lost__txt,
+.game-win__txt {
   font-size: 45px;
   color: tomato;
 }
+
+.game-lost__txt.game-result-display,
+.game-win__txt.game-result-display {
+  display: none;
+}
+
 .reset-btn--hover:hover,
 .play-btn--hover:hover {
   transform: scale(1.15);
@@ -90,7 +97,6 @@ body {
   margin: 200px 0 0 0;
   width: 100%;
   height: 45%;
-  background-color: rgba(255, 255, 255, 0.7);
 }
 .targets {
   position: relative;
