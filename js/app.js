@@ -157,7 +157,6 @@ function rePlayGame() {
   resetBox.classList.remove('show');
   resetBox.classList.add('hidden');
   onPlayGame();
-  window.location.reload();
 }
 
 playBtn.addEventListener('click', onPlayGame);
