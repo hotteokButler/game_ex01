@@ -13,6 +13,7 @@
 ## 구현
   - only HTML CSS Vanilla.JS
   - git hub commit message 작성법 공부 
+  - JavaScript API인 Audio()를 이용하여 배경음 재생 및 효과음 재생
 
 ## 진행중
 
