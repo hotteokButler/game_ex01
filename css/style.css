@@ -1,131 +1,99 @@
-body {
+@charset 'utf-8';
+
+/* game */
+.game {
   display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100vh;
+  flex-direction: column;
+  width: 800px;
+  height: 500px;
+  margin: auto;
+  border-radius: 20px;
+  background: url(../img/background.png) center/cover;
 }
-#game-field {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background-image: url(../img/background.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-.game-field__play-btn,
-.game-field__timmer,
-.game-field__counter,
-.game-lost__reset-btn {
-  margin: 20px auto 0 auto;
-  border-radius: 8px;
-  border: 4px solid #323232;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
-  text-align: center;
-}
-.game-field__play-btn {
-  display: block;
-  width: 90px;
-  padding-top: 60px;
-  background-image: url(../img/play.svg);
-  background-repeat: no-repeat;
-  background-size: 80% auto;
-  background-position: center top;
-  background-color: #ffeaff;
+.game__button {
+  width: 60px;
+  height: 60px;
+  background-color: wheat;
+  border: 4px solid #000;
   font-size: 24px;
-  color: #ae3cae;
-  cursor: pointer;
+  transition: transform 300ms ease-in;
+  will-change: display;
 }
-.game-field__timmer {
-  width: 200px;
-  font-size: 70px;
-  background-color: #fcfcfc;
-  border-radius: 8px;
+.game__button:hover {
+  transform: scale(1.1);
 }
-.game-field__counter {
-  width: 70px;
-  height: 70px;
-  font-size: 65px;
-  line-height: 58px;
-  color: #fff;
-  border-radius: 50%;
-  background-color: #883c83;
-}
-.game-lost {
-  width: 450px;
-  height: 200px;
-  border-radius: 10px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
-  background-color: rgba(255, 255, 255, 0.7);
-  text-align: center;
-}
-.game-lost--position {
-  position: absolute;
-  left: 50%;
-  bottom: 20%;
-  transform: translateX(-50%);
-  z-index: 999999;
-}
-.game-lost__reset-btn {
-  display: block;
-  margin-bottom: 30px;
-  width: 90px;
-  height: 90px;
-  background-image: url(../img/replay.svg);
-  background-size: 80% auto;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #fff3e2;
-  text-indent: -99999px;
-  cursor: pointer;
-}
-.game-lost__txt,
-.game-win__txt {
-  font-size: 45px;
-  color: tomato;
-}
-
-.game-lost__txt.game-result-display,
-.game-win__txt.game-result-display {
-  display: none;
-}
-
-.reset-btn--hover:hover,
-.play-btn--hover:hover {
-  transform: scale(1.15);
-}
-.targets {
-  margin: 200px 0 0 0;
-  width: 100%;
-  height: 45%;
-}
-.targets {
-  position: relative;
-}
-.game-item__bug,
-.game-item__carrot {
-  position: absolute;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  cursor: pointer;
-}
-.game-item__carrot {
+.game__timer {
   width: 100px;
-  height: 100px;
-  background-image: url(../img/carrot.png);
+  margin: 8px 0 0;
+  font-size: 32px;
+  text-align: center;
+  background-color: #fff;
+  border: 5px solid #000;
+  border-radius: 20px;
+  visibility: hidden;
 }
-.game-item__bug {
-  width: 80px;
-  height: 80px;
-  background-image: url(../img/bug.png);
-  z-index: 1;
+.game__score {
+  width: 55px;
+  height: 55px;
+  margin: 8px 0 0;
+  font-size: 32px;
+  text-align: center;
+  line-height: 55px;
+  color: #fff;
+  border: 3px solid #000;
+  border-radius: 50%;
+  background-color: #ff9571;
+  visibility: hidden;
 }
-.game-lost.hidden,
-.targets.hidden,
-.game-lost.hidden {
+.game__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+.game__field {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 40px 0 0;
+}
+.carrot,
+.bug {
+  cursor: pointer;
+  transition: 0.2s transform ease-in;
+}
+.carrot:hover,
+.bug:hover {
+  transform: scale(1.1);
+}
+
+/* pop-up */
+.pop-up {
+  width: 400px;
+  height: 160px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #00000070;
+  border-radius: 20px;
+  transform: translateY(-150%);
+}
+.pop-up__refresh {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  background-color: wheat;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+.pop-up__message {
+  display: block;
+  font-size: 38px;
+  color: #fff;
+}
+.pop-up.pop-up--hide {
   display: none;
 }
-.game-lost.show,
-.targets.show,
-.game-lost.show {
-  display: block;
+.game__button--hide {
+  display: none;
 }
