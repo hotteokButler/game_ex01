@@ -6,7 +6,7 @@
   margin: 0;
   box-sizing: border-box;
   line-height: 1em;
-  font-family: 'Geo', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 button,
 input {
@@ -14,7 +14,9 @@ input {
   outline: none;
   background-color: transparent;
 }
-
+button {
+  cursor: pointer;
+}
 a {
   text-decoration: none;
 }
