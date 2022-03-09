@@ -1,37 +1,64 @@
 'use strict';
 
+const carrotSound = new Audio('./sound/carrot_pull.mp3');
+const CARROT_SIZE = 80;
+
+// 클래스에 상관없는 함수라면 클래스에 포함되지 않는것이 반복적으로 오브젝트에 만들어지지 않기때문에 효율적이다. => static 함수
+function randomNumber(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 export default class Field {
-  constructor() {
+  constructor(carrotCount, bugCount) {
+    this.carrotCount = carrotCount;
+    this.bugCount = bugCount;
     this.field = document.querySelector('.game__field');
-    this.item = document.createElement('img');
     this.fieldRect = this.field.getBoundingClientRect();
-    this.carrotSize = 80;
-    this.field.addEventListener('click', (e) => {
-      this.onClick && this.onClick(e);
-    });
+    this.field.addEventListener('click', this.onClick);
   }
 
-  setTargetListner(onClick) {
-    this.onClick = onClick;
+  init() {
+    this.field.innerHTML = '';
+    this._addItem('carrot', this.carrotCount, './img/carrot.png');
+    this._addItem('bug', this.bugCount, './img/bug.png');
   }
 
-  randomNumber(min, max) {
-    return Math.random() * (max - min) + min;
+  setClickListner(onItemClick) {
+    this.onItemClick = onItemClick;
   }
-
-  addItem(className, imgPath) {
-    const item = this.item;
+  // 아직 자바스크립트에서는 프라이빗이 통용적으로 쓰여지고 있지 않기 때문에
+  // 대부분 underscore(_)를 이용해서 외부에서는 부르지 않도록 표시해줄 수 있지만,
+  // 별로 좋지 않은 방법들이다.
+  _addItem(className, count, imgPath) {
     const x1 = 0;
     const y1 = 0;
-    const x2 = this.fieldRect.width - this.carrotSize;
-    const y2 = this.fieldRect.height - this.carrotSize;
-    item.setAttribute('class', className);
-    item.setAttribute('src', imgPath);
-    item.style.position = 'absolute';
-    const x = this.randomNumber(x1, x2);
-    const y = this.randomNumber(y1, y2);
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
-    this.field.appendChild(item);
+    const x2 = this.fieldRect.width - CARROT_SIZE;
+    const y2 = this.fieldRect.height - CARROT_SIZE;
+    for (let i = 0; i < count; i++) {
+      const item = document.createElement('img');
+      item.setAttribute('class', className);
+      item.setAttribute('src', imgPath);
+      item.style.position = 'absolute';
+      const x = randomNumber(x1, x2);
+      const y = randomNumber(y1, y2);
+      item.style.left = `${x}px`;
+      item.style.top = `${y}px`;
+      this.field.appendChild(item);
+    }
   }
+  onClick(event) {
+    const target = event.target;
+    // matches API : https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
+    if (target.matches('.carrot')) {
+      target.remove();
+      playSound(carrotSound);
+      this.onItemClick && this.onItemClick('carrot');
+    } else if (target.matches('.bug')) {
+      this.onItemClick && this.onItemClick('bug');
+    }
+  }
+}
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play();
 }
