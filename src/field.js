@@ -71,8 +71,8 @@ export default class Field {
       않기 위해서는 해당 함수를 클래스와 바인딩 해줘야한다. => this 바인딩
       */
     } else if (target.matches('.bug')) {
-      this.onItemClick && this.onItemClick('bug');
       sound.playBug();
+      this.onItemClick && this.onItemClick('bug');
     }
   };
 }
