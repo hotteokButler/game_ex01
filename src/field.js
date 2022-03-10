@@ -8,7 +8,12 @@ function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-export default class Field {
+export const ItemType = Object.freeze({
+  carrot: 'carrot',
+  bug: 'bug',
+});
+
+export class Field {
   constructor(carrotCount, bugCount) {
     this.carrotCount = carrotCount;
     this.bugCount = bugCount;
@@ -61,7 +66,7 @@ export default class Field {
     if (target.matches('.carrot')) {
       target.remove();
       sound.playCarrot();
-      this.onItemClick && this.onItemClick('carrot');
+      this.onItemClick && this.onItemClick(ItemType.carrot);
       /*
       this.onItemClick && this.onItemClick('carrot');
       실제로 onClick이 다른 곳으로 콜백으로 전달되어졌을 때에는 this라는 정보는
@@ -72,7 +77,7 @@ export default class Field {
       */
     } else if (target.matches('.bug')) {
       sound.playBug();
-      this.onItemClick && this.onItemClick('bug');
+      this.onItemClick && this.onItemClick(ItemType.bug);
     }
   };
 }

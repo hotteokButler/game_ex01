@@ -1,12 +1,18 @@
 'use strict';
-import Field from './field.js';
+import { Field, ItemType } from './field.js';
 import * as sound from './sound.js';
+
+export const Reason = Object.freeze({
+  win: 'win',
+  lose: 'lose',
+  cancel: 'cancel',
+});
 
 // Builder Pattern
 /* 무언가 오브젝트를 만들 때 Builder Pattern을 이용해서 오브젝트를 간단명료하게
-읽기 쉽게 만들  수 있다.
+읽기 쉽게 만들 수 있다.
 */
-export default class GameBuilder {
+export class GameBuilder {
   gameDuration(duration) {
     this.gameDuration = duration;
     return this;
@@ -41,7 +47,7 @@ class Game {
     this.gameBtn = document.querySelector('.game__button');
     this.gameBtn.addEventListener('click', () => {
       if (this.started) {
-        this.stop();
+        this.stopOrFinish(Reason.cancel);
       } else {
         this.start();
       }
@@ -58,38 +64,24 @@ class Game {
   setGameStopListner(onGameStop) {
     this.onGameStop = onGameStop;
   }
-  start = () => {
+  start() {
     this.started = true;
     this.initGame();
     this.showStopButton();
     this.showTimerAndScore();
     this.startGameTimer();
     sound.playBackground();
-  };
-  stop = () => {
+  }
+
+  stopOrFinish(reason) {
     this.started = false;
+    this.score = 0;
     this.stopGameTimer();
     this.hideGameButton();
     this.hideTimerAndScore();
     sound.stopBackground();
-    sound.playAlert();
-    this.onGameStop && this.onGameStop('cancel');
-  };
-  finish = (win) => {
-    this.started = false;
-    this.score = 0;
-    this.hideGameButton();
-    this.hideTimerAndScore();
-    // finishGame에서 한번 더 stopGameTimer을 호출해줘야지 중복되어 성공 후 리플레이시 타임이 빠르게 줄어드는 오류를 제거
-    this.stopGameTimer(this.timer);
-    if (win) {
-      sound.playWin();
-    } else {
-      sound.playAlert();
-      sound.stopBackground();
-    }
-    this.onGameStop && this.onGameStop(win ? 'win' : 'lose');
-  };
+    this.onGameStop && this.onGameStop(reason);
+  }
 
   //this 정보에 접근해야하기때문에 arrow function으로
 
@@ -97,16 +89,16 @@ class Game {
     if (!this.started) {
       return;
     }
-    if (item === 'carrot') {
+    if (item === ItemType.carrot) {
       this.score++;
 
       this.updateScoreBoard(this.score, this.carrotCount);
       if (this.score === this.carrotCount) {
-        this.finish(true);
+        this.stopOrFinish(Reason.win);
       }
-    } else if (item === 'bug') {
+    } else if (item === ItemType.bug) {
       this.stopGameTimer();
-      this.finish(false);
+      this.stopOrFinish(Reason.lose);
     }
   };
 
@@ -122,7 +114,7 @@ class Game {
         clearInterval(this.timer);
         this.started = false;
         //finishGame의 argument가 boolean값으로 전달되고있으므로 조건식을 전달하여 중단유무
-        this.finish(this.carrotCount === this.score);
+        this.stopOrFinish(this.carrotCount === this.score ? Reason.win : Reason.lose);
         return;
       }
       this.updateTimerText(--remaingTimeSec);
