@@ -1,6 +1,6 @@
 'use strict';
+import * as sound from './sound.js';
 
-const carrotSound = new Audio('./sound/carrot_pull.mp3');
 const CARROT_SIZE = 80;
 
 // 클래스에 상관없는 함수라면 클래스에 포함되지 않는것이 반복적으로 오브젝트에 만들어지지 않기때문에 효율적이다. => static 함수
@@ -14,6 +14,15 @@ export default class Field {
     this.bugCount = bugCount;
     this.field = document.querySelector('.game__field');
     this.fieldRect = this.field.getBoundingClientRect();
+    /* 바인딩 첫번째 방법 :
+    this.onClick = this.onClick.bind(this); => this.onClick에 바인딩된 값을 할당 : 맞는 방법이긴하지만, 이렇게는 잘 안씀
+     this.field.addEventListener('click', this.onClick); */
+
+    /* 두번째 방법 : arrow function을 사용(arrow function은 this값이 유지됨)
+    this.field.addEventListener('click', (event) => this.onClick(event));
+     */
+
+    // 세번째 방법 (멤버함수인 onClick활용)
     this.field.addEventListener('click', this.onClick);
   }
 
@@ -46,19 +55,32 @@ export default class Field {
       this.field.appendChild(item);
     }
   }
-  onClick(event) {
+  onClick = (event) => {
     const target = event.target;
     // matches API : https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
     if (target.matches('.carrot')) {
       target.remove();
-      playSound(carrotSound);
+      sound.playCarrot();
       this.onItemClick && this.onItemClick('carrot');
+      /*
+      this.onItemClick && this.onItemClick('carrot');
+      실제로 onClick이 다른 곳으로 콜백으로 전달되어졌을 때에는 this라는 정보는
+      존재하지 않기 때문에 아이템 클릭은 계속 undefined 상태.(this라는 정보가 더이상 class가 아니기 때문에) 
+      
+      자바스크립트에서는 클래스에 있는 함수를 누군가에게 전달해 줄 때는 클래스 정보가 무시되기때문에 그렇게 하지 
+      않기 위해서는 해당 함수를 클래스와 바인딩 해줘야한다. => this 바인딩
+      */
     } else if (target.matches('.bug')) {
       this.onItemClick && this.onItemClick('bug');
+      sound.playBug();
     }
-  }
+  };
 }
-function playSound(sound) {
-  sound.currentTime = 0;
-  sound.play();
-}
+
+// this 정리
+
+/* 
+this라는 것은 어떤 클래스 안에 있는 함수를 콜백으로 전달할 때는 그 함수가 포함되어져 있는 클래스의 정보가 사라짐
+
+따라서 클래스와 콜백으로 전달할 함수를 묶을 수 있는 즉, this와 함수를 묶을 수 있는 바인딩 또는 arrow function을 활용.
+*/

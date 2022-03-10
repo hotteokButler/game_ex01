@@ -2,6 +2,7 @@
 
 import PopUp from './popup.js';
 import Field from './field.js';
+import * as sound from './sound.js';
 
 (function () {
   const CARROT_COUNT = 15;
@@ -11,12 +12,6 @@ import Field from './field.js';
   const gameBtn = document.querySelector('.game__button');
   const gameTimer = document.querySelector('.game__timer');
   const gameScore = document.querySelector('.game__score');
-
-  const carrotSound = new Audio('./sound/carrot_pull.mp3');
-  const bugSound = new Audio('./sound/bug_pull.mp3');
-  const alertSound = new Audio('./sound/alert.wav');
-  const bgSound = new Audio('./sound/bg.mp3');
-  const winSound = new Audio('./sound/game_win.mp3');
 
   let started = false;
   let score = 0;
@@ -38,6 +33,7 @@ import Field from './field.js';
     }
     if (item === 'carrot') {
       score++;
+
       updateScoreBoard();
       if (score === CARROT_COUNT) {
         finishGame(true);
@@ -56,15 +52,13 @@ import Field from './field.js';
     }
   });
 
-  // 이렇게 함수 단위로 정의하면서 하나 하나씩 메꿔가면서 코딩해나가면된다
-
   function startGame() {
     started = true;
     initGame();
     showStopButton();
     showTimerAndScore();
     startGameTimer();
-    playSound(bgSound);
+    sound.playBackground();
   }
   function stopGame() {
     started = false;
@@ -72,8 +66,8 @@ import Field from './field.js';
     hideGameButton();
     gameFinishBanner.showWithText('REPLAY????');
     hideTimerAndScore();
-    stopSound(bgSound);
-    playSound(alertSound);
+    sound.stopBackground();
+    sound.playAlert();
   }
   function finishGame(win) {
     started = false;
@@ -83,10 +77,10 @@ import Field from './field.js';
     // finishGame에서 한번 더 stopGameTimer을 호출해줘야지 중복되어 성공 후 리플레이시 타임이 빠르게 줄어드는 오류를 제거
     stopGameTimer(timer);
     if (win) {
-      playSound(winSound);
+      sound.playWin();
     } else {
-      playSound(alertSound);
-      stopSound(bgSound);
+      sound.playAlert();
+      sound.stopBackground();
     }
     gameFinishBanner.showWithText(win ? 'YOU WON!!!!😎' : 'YOU LOST!!💩');
   }
@@ -142,13 +136,6 @@ import Field from './field.js';
     gameField.init();
   }
 
-  function playSound(sound) {
-    sound.currentTime = 0;
-    sound.play();
-  }
-  function stopSound(sound) {
-    sound.pause();
-  }
   function updateScoreBoard() {
     gameScore.innerText = CARROT_COUNT - score;
   }
