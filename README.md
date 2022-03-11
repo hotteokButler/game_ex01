@@ -5,41 +5,100 @@
 - **All source of copyrights are followed in DreamCoding.(Images, musics)**
 
 - **But, The All code is from 'hotteokButler'!**
+
 ## 게임기능
-  - 시간내에 랜덤으로 뿌려진 당근을 찾아 click!하세요!
-  - 벌레를 클릭하게되면 'You lost!'
+
+- 시간내에 랜덤으로 뿌려진 당근을 찾아 click!하세요!
+- 벌레를 클릭하게되면 'You lost!'
 
 ## 구현
-  - only HTML CSS Vanilla.JS
-  - git hub commit message 작성법 공부 
 
-## 진행중
+- only HTML CSS Vanilla.JS
+- git hub commit message 작성법 공부
+- 모듈화 연습
+- Builder Pattern 적용
 
-## 중간 메모
-  - git hub commit message 작성법을 공부하며 적용중인데 제대로 되는건지 모르겠다
-  - [error1] : 플레이 버튼 클릭시 랜덤하게 뿌려지는 벌레와 당근들이 정해진 viewprot를 벗어나는 오류가 생겼다
-    - (해결) : 랜덤한 값에 100이상(-> 0으로 기준을 잡지않은 이유: 너무 많이 퍼지지 않게하기위해서)
-  - [error2] : 리플레이 버튼을 누르게되면 기존에 추가된 타겟에 추가가되어 보여지는 오류가 생겼다
-    - (해결) : while반복문을 이용해 타겟박스의 자식요소가 없어질때까지(false) 첫번째 자식요소를 지우는 명령을 추가해 해결
-  ```JavaScript
-  //[error2 : 수정전]
-      function rePlayGame() {
-  gameStart = false;
-  resetBox.classList.remove('show');
-  resetBox.classList.add('hidden');
-  onPlayGame();
+## 파일 구조도
+
+```
+/carrot_game/
+|
+├- index.html
+├- README.md
+├- src => module
+|   ├- all.min.js
+|   ├- app.js
+|   ├- game.js
+|   ├- field.js
+|   ├- popup.js
+|   ⌊_ sound.js
+|
+├- css
+|   ├- all.min.css
+|   ├- reset.css
+|   ⌊_ style.css
+|
+├- sound
+|   ├- alert.wav
+|   ├- bg.mp3
+|   ├- bug_pull.mp3
+|   ├- carrot_pull.mp3
+|   ⌊_ game_win.mp3
+|
+├- img
+|   ├- background.png
+|   ├- bug.png
+|   ⌊_ carrot.png
+⌊_
+```
+
+## Builder Pattern
+
+### BuilderPatter이란?
+
+- Object를 생성하기위한 디자인 패턴으로, 복잡한 Object를 단순한 Object단위로 분리하여 단계별로 접근하기 위해서 사용된다.
+- 분리된 object의 함수는 this를 리턴하고 이 this는 현재의 object를 참조한다.
+  따라서 chaining을 이용해 call 할 수 있다.
+- 생성자에 들어갈 매개 변수가 많든 적든 차례차례 매개 변수를 받아들이고 모든 매개 변수를 받은 뒤에 이 변수를 통합해서 한번에 사용한다.
+
+> 참고1) : https://zetcode.com/javascript/builderpattern/
+>
+> 참고2) : https://jdm.kr/blog/217
+
+```javascript
+// ./src/game.js
+
+export class GameBuilder {
+  gameDuration(duration) {
+    this.gameDuration = duration;
+    return this;
   }
-  ```
-  ```JavaScript
-  //[error2 : 수정후]
-  function rePlayGame() {
-  gameStart = false;
-  while (targetBox.hasChildNodes()) {
-    targetBox.removeChild(targetBox.firstChild);
+
+  carrotCount(num) {
+    this.carrotCount = num;
+    return this;
   }
-  resetBox.classList.remove('show');
-  resetBox.classList.add('hidden');  
-  onPlayGame();
+  bugCount(num) {
+    this.bugCount = num;
+    return this;
   }
- ```
-## 게임만들기는 아직 진행중 --img~~ 😎
+
+  build() {
+    return new Game(
+      this.gameDuration, //
+      this.carrotCount, //
+      this.bugCount //
+    );
+  }
+}
+```
+
+```javascript
+// ./src/app.js
+
+const game = new GameBuilder()
+  .gameDuration(18) //
+  .carrotCount(15) //
+  .bugCount(15) //
+  .build();
+```
